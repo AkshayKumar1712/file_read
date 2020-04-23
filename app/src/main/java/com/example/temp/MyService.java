@@ -1,10 +1,9 @@
 package com.example.temp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
-import android.os.Bundle;
-import android.os.Environment;
+import android.app.IntentService;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -12,20 +11,25 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
-public class secondActivity extends AppCompatActivity {
+import androidx.annotation.Nullable;
 
+public class MyService extends Service {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_second);
-        String file_path=getIntent().getStringExtra("path_of_the_file");
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        String file_path=intent.getStringExtra("path_of_the_file");
         try {
             loadResultFromTxt(file_path);
         } catch (IOException e) {
             Log.d("TAG", "onCreate: "+e);
         }
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     private void loadResultFromTxt(String path) throws IOException {
